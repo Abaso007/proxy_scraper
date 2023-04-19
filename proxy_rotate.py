@@ -41,7 +41,7 @@ def proxy_rotate(url):
 
     # check if proxies_list is empty or not
     if proxies_list and (len(proxies_list) >= 50):
-        for i in range(0, len(proxies_list)):
+        for i in range(len(proxies_list)):
             try:
                 #pick random proxy and header
                 proxy_pick = random.choice(proxies_list)
@@ -70,7 +70,6 @@ def proxy_rotate(url):
 
                 print(f"{proxy_pick} removed")
                 print(len(proxies_list))
-    # start scrape to get new proxies and start function again
     else:
         scrape()
         return proxy_rotate(url)

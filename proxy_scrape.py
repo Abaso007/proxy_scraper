@@ -44,12 +44,12 @@ def scrape():
     ]
 
     if proxies_list: ## check if proxies_list is empty or not
-        for i in range(0, len(proxies_list)):
+        for i in range(len(proxies_list)):
             try:
                 #pick random proxy and header
                 proxy_pick = random.choice(proxies_list)
                 headers_pick = random.choice(headers_list)
-                
+
                 ## configuring urllib for use with proxies
                 proxy_support = urllib.request.ProxyHandler(proxy_pick)
                 opener = urllib.request.build_opener(proxy_support)
@@ -68,8 +68,7 @@ def scrape():
                 proxies_list.remove(proxy_pick)
                 print(f"{proxy_pick} removed")
                 print(len(proxies_list))
-   
-    ## if proxies_list is empty, proxies are retrieved from the site without using proxies
+
     else:
         req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
         sauce = urllib.request.urlopen(req).read()
@@ -120,7 +119,7 @@ def proxy_construct(proxy_port, proxy_ip, https_list):
     ##print(proxy_port)
 
     proxy_list = []
-    for i in range(0, len(proxy_port)):      ## using for loop starting from 0 to size of proxy_port list. Doesn't matter which list you use. They should all be the same size
+    for i in range(len(proxy_port)):      ## using for loop starting from 0 to size of proxy_port list. Doesn't matter which list you use. They should all be the same size
         PROXY = https_list[i] + proxy_ip[i] + proxy_port[i]
         proxy_list.append(PROXY)
         print(PROXY)
@@ -129,14 +128,14 @@ def proxy_construct(proxy_port, proxy_ip, https_list):
 # making dictionaries using constructed strings 
 def proxy_dict(https_list, proxy_list):
     proxy_dict_list = []
-    for i in range(0, len(https_list)):
+    for i in range(len(https_list)):
         if https_list[i] == "https://":
             proxies_dict = {"https": proxy_list[i]}
             proxy_dict_list.append(proxies_dict)
         if https_list[i] == "http://":
             proxies_dict = {"http": proxy_list[i]}
             proxy_dict_list.append(proxies_dict)
-            
+
     return save_file(proxy_dict_list, https_list, proxy_list)
 
 ## save to local .csv .json .txt etc
@@ -147,12 +146,9 @@ def save_file(proxy_dict_list, https_list, proxy_list):
         json.dump(proxy_list, f)
     proxy_list1 = pd.DataFrame(proxy_list)
     proxy_list1.to_csv("proxylist.csv", index=False)
-    new = []
-    for proxy in proxy_list:
-        new.append(proxy + "\n")
-    f = open("proxylist.txt", "w")
-    f.writelines(new) 
-    f.close()
+    new = [proxy + "\n" for proxy in proxy_list]
+    with open("proxylist.txt", "w") as f:
+        f.writelines(new)
     print("******************************************************")
     print(proxy_dict_list)
     print("******************************************************")
